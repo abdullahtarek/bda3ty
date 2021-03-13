@@ -10,6 +10,7 @@ ThemeData theme() {
     textTheme: textTheme(),
     inputDecorationTheme: inputDecorationTheme(),
     visualDensity: VisualDensity.adaptivePlatformDensity,
+
   );
 }
 
@@ -18,6 +19,7 @@ InputDecorationTheme inputDecorationTheme() {
     borderRadius: BorderRadius.circular(28),
     borderSide: BorderSide(color: kTextColor),
     gapPadding: 10,
+
   );
   return InputDecorationTheme(
     // If  you are using latest version of flutter then lable text and hint text shown like this
@@ -28,6 +30,7 @@ InputDecorationTheme inputDecorationTheme() {
     enabledBorder: outlineInputBorder,
     focusedBorder: outlineInputBorder,
     border: outlineInputBorder,
+
   );
 }
 

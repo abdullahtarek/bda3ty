@@ -5,14 +5,17 @@ import 'components/body.dart';
 
 class OtpScreen extends StatelessWidget {
   static String routeName = "/otp";
+
   @override
   Widget build(BuildContext context) {
+    final String phone_number = ModalRoute.of(context).settings.arguments;
+
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("OTP Verification"),
       ),
-      body: Body(),
+      body: Body(phoneNumber: phone_number),
     );
   }
 }
