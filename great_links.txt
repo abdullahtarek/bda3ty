@@ -1,5 +1,4 @@
 
-Good link for flutter and firebase setup: https://www.youtube.com/watch?v=fi2WkznwWbc&t=909s
-Great link for firebase OTP: https://www.youtube.com/watch?v=opBwTxicw1k
-
-
+Good link for flutter and firebase setup:   https://www.youtube.com/watch?v=fi2WkznwWbc&t=909s
+Great link for firebase OTP :               https://www.youtube.com/watch?v=opBwTxicw1k
+Good link for SVG images    :               https://www.svgrepo.com/

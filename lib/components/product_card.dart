@@ -29,65 +29,90 @@ class ProductCard extends StatelessWidget {
             DetailsScreen.routeName,
             arguments: ProductDetailsArguments(product: product),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AspectRatio(
-                aspectRatio: 1.02,
-                child: Container(
-                  padding: EdgeInsets.all(getProportionateScreenWidth(20)),
-                  decoration: BoxDecoration(
-                    color: kSecondaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Hero(
-                    tag: product.id.toString(),
-                    child: Image.asset(product.images[0]),
-                  ),
+          child: ProductCardItem(product: product),
+        ),
+      ),
+    );
+  }
+}
+
+class ProductCardItem extends StatelessWidget {
+  const ProductCardItem({
+    Key key,
+    @required this.product,
+  }) : super(key: key);
+
+  final Product product;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10)
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 2,
+            offset: Offset(0, 1), // changes position of shadow
+          ),
+        ],
+      ),
+
+      padding: EdgeInsets.all(getProportionateScreenWidth(5)),
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+
+          children: [
+            AspectRatio(
+              aspectRatio: 1.02,
+              child: Container(
+                padding: EdgeInsets.all(getProportionateScreenWidth(20)),
+                decoration: BoxDecoration(
+                  color: kSecondaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Hero(
+                  tag: product.id.toString(),
+                  child: Image.asset(product.images[0]),
                 ),
               ),
-              const SizedBox(height: 10),
-              Text(
-                product.title,
-                style: TextStyle(color: Colors.black),
-                maxLines: 2,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              product.title,
+              style: TextStyle(color: Colors.black),
+              maxLines: 2,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "\$${(product.price-10).toStringAsFixed(2)} - \$${product.price.toStringAsFixed(2)}",
+                  style: TextStyle(
+                    fontSize: getProportionateScreenWidth(13),
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black,//kPrimaryColor,
+                  ),
+                ),
+
+              ],
+            ),
+            Text(
+              " (الحد الأدنى)  قطع 2",
+              style: TextStyle(
+                fontSize: getProportionateScreenWidth(12),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "\$${product.price}",
-                    style: TextStyle(
-                      fontSize: getProportionateScreenWidth(18),
-                      fontWeight: FontWeight.w600,
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(50),
-                    onTap: () {},
-                    child: Container(
-                      padding: EdgeInsets.all(getProportionateScreenWidth(8)),
-                      height: getProportionateScreenWidth(28),
-                      width: getProportionateScreenWidth(28),
-                      decoration: BoxDecoration(
-                        color: product.isFavourite
-                            ? kPrimaryColor.withOpacity(0.15)
-                            : kSecondaryColor.withOpacity(0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: SvgPicture.asset(
-                        "assets/icons/Heart Icon_2.svg",
-                        color: product.isFavourite
-                            ? Color(0xFFFF4848)
-                            : Color(0xFFDBDEE4),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -5,6 +5,10 @@ import 'package:shop_app/models/Product.dart';
 import '../../../size_config.dart';
 import 'section_title.dart';
 
+
+
+
+
 class PopularProducts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,6 +22,7 @@ class PopularProducts extends StatelessWidget {
         SizedBox(height: getProportionateScreenWidth(20)),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
+          padding: EdgeInsets.all(getProportionateScreenWidth(5)),
           child: Row(
             children: [
               ...List.generate(
@@ -33,7 +38,9 @@ class PopularProducts extends StatelessWidget {
               SizedBox(width: getProportionateScreenWidth(20)),
             ],
           ),
-        )
+        ),
+        SizedBox(height: getProportionateScreenWidth(20)),
+
       ],
     );
   }

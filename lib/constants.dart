@@ -32,6 +32,10 @@ final RegExp phoneValidationRegExp = RegExp(r"(01)[0-9]{9}");
 const String kPhoneNullError = "يرجى إدخال رقم الهاتف الخاص بك";
 const String kInvalidPhoneError = "يرجى إدخال رقم هاتف صحيح";
 
+const String kNameNullError = "يرجى إدخال اسم المتجر";
+const String kStoreNameNullError = "يرجى إدخال اسم المتجر";
+const String kStoreAddressNullError = "يرجى إدخال عنوان المتجر";
+
 
 const String kPassNullError = "Please Enter your password";
 const String kShortPassError = "Password is too short";

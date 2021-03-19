@@ -1,0 +1,34 @@
+** Firebase where function from the database:
+
+ await FirebaseFirestore.instance.collection('products').where("arabicName",  arrayContains:"ابل ايفون 11" ).get().then((queryResult) {
+
+                queryResult.docs.forEach((element) {
+                  print(element.id);
+                  print(element['arabicName']);
+
+                });
+              });
+
+======================================================================================================================
+
+*** Get products from firebase 
+
+await FirebaseFirestore.instance.collection('products').limit(1).get().then((queryResult) {
+
+                queryResult.docs.forEach((element) {
+                  print(element.id);
+                  print(element['arabicName']);
+
+                });
+              });
+
+
+======================================================================================================================
+
+*** Get Image URL from path
+
+await FirebaseStorage.instance.ref().child("products/3ykK1fvn2oyabNqD8BKA/image_1.jpg").getDownloadURL().then((value) {
+                print(value.toString());
+
+              });
+              

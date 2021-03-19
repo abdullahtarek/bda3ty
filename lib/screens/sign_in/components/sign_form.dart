@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_app/components/custom_surfix_icon.dart';
 import 'package:shop_app/components/form_error.dart';
@@ -11,6 +13,8 @@ import '../../../components/default_button.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 
+String verificationCode ='-9999';
+
 class SignForm extends StatefulWidget {
   @override
   _SignFormState createState() => _SignFormState();
@@ -21,8 +25,8 @@ class _SignFormState extends State<SignForm> {
   String email;
   String password;
   String phone_number;
-  TextEditingController _phone_number = TextEditingController();
   String _verificationCode;
+  TextEditingController _phone_number = TextEditingController();
   bool remember = false;
   final List<String> errors = [];
 
@@ -54,12 +58,47 @@ class _SignFormState extends State<SignForm> {
           SizedBox(height: getProportionateScreenHeight(20)),
           DefaultButton2(
             text: "تسجيل الدخول",
-            press: () {
+            press: () async {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
                 // if all are valid then go to success screen
                 KeyboardUtil.hideKeyboard(context);
-                Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+
+                String doc_id = "4lnadHg2Ejstd21XCLOR";
+
+                await FirebaseFirestore.instance.collection('users').doc(doc_id).get().then(
+                    (doc) {
+                      if (doc.exists)
+                        {
+                          print("exists");
+                          print(doc['name']);
+                          // When he successfully signs up
+                          FirebaseFirestore.instance.collection("users").doc(doc_id).set(
+                              {
+                                "name":"Abdullah",
+                                "phoneNumber": "01009026001",
+                                "storeAddress": "6 od october",
+                                "storeName": "hamada",
+                                "state" : "unverfied"
+                              });
+
+
+                        }
+                      else{
+                        // when he goes to sign up page
+                        print("Dose not exist");
+                        FirebaseFirestore.instance.collection("users").doc(doc_id).set(
+                            {
+                              "phoneNumber": "01009026001",
+                              "state" : "SignUp"
+                            });
+
+                      }
+                    });
+
+                print("heyyyyy");
+
+                //Navigator.pushNamed(context, LoginSuccessScreen.routeName);
               }
             },
               color: kPrimaryColor
@@ -71,7 +110,7 @@ class _SignFormState extends State<SignForm> {
               if (_formKey.currentState.validate()) {
                 KeyboardUtil.hideKeyboard(context);
                 _verifyPhone();
-                //Navigator.pushNamed(context, OtpScreen.routeName, arguments: _phone_number.text);
+                Navigator.pushNamed(context, OtpScreen.routeName, arguments: _phone_number.text);
               }
             },
             color: kSecondaryColor
@@ -165,7 +204,10 @@ class _SignFormState extends State<SignForm> {
               .signInWithCredential(credential)
               .then((value) async {
             if (value.user != null) {
+
               print("yyaaaaayyyy logged in ");
+
+
             }
           });
         },
@@ -175,6 +217,7 @@ class _SignFormState extends State<SignForm> {
         codeSent: (String verficationID, int resendToken) {
           setState(() {
             _verificationCode = verficationID;
+            verificationCode = verficationID;
           });
         },
         codeAutoRetrievalTimeout: (String verificationID) {
