@@ -39,82 +39,54 @@ class Body extends StatelessWidget {
             Categories(),
             SpecialOffers(),
 
+            SizedBox(height: getProportionateScreenWidth(30)),
+
             FutureBuilder(
-                future: getdata(),
+                future: getFireStoreProducts(),
                 builder: (context, snapshot)
                 {
-                    if (snapshot.data != null){
-                        return Text(snapshot.data);
-                    }
+                  if (snapshot.data != null){
+                    print(snapshot.data[0].images[0]);
+                    return PopularProducts2(productList: snapshot.data,);
+                  }
 
-                    return CircularProgressIndicator();
-            }
-
+                  return CircularProgressIndicator();
+                }
             ),
 
 
-            //Image.network("https://firebasestorage.googleapis.com/v0/b/bda3ty-a915c.appspot.com/o/products%2F3ykK1fvn2oyabNqD8BKA%2Fimage_1.jpg?alt=media&token=bb8121f7-f3de-436a-b2e7-e1acbde6db13"),
-
-            ElevatedButton(onPressed: () async{
-              print("Abdullah");
-
-              List<Product2> products = await getFireStoreProducts();
-
-              print(products[0].title);
-              print(products[1].title);
-
-              print(products[0].images);
-              print(products[1].images);
-
-            },
-              child: Text("Button"),
-            ),
-
-
-            Padding(
-              padding:
-              EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
-              child: SectionTitle(title: "Popular Products", press: () {}),
-            ),
-            SizedBox(height: getProportionateScreenWidth(20)),
-
-
-            Container(
-              margin: EdgeInsets.only(left: getProportionateScreenWidth(15),right:getProportionateScreenWidth(10) ) ,
-              child: GridView.count(
-                //padding: EdgeInsets.all(getProportionateScreenWidth(8)),
-                physics: ScrollPhysics(),
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                childAspectRatio: (3.3/5),
-                children: [
-                  ...List.generate(
-                    3,
-                        (index) {
-                      if (demoProducts[index].isPopular)
-                        return Container(
-                            margin: EdgeInsets.all(getProportionateScreenWidth(10)),
-                            child: ProductCardItem(product: demoProducts[index])
-                        );
-
-                      return SizedBox
-                          .shrink(); // here by default width and height is 0
-                    },
-                  ),
-                  SizedBox(width: getProportionateScreenWidth(20)),
-                ],
-              ),
-            ),
+            // SizedBox(height: getProportionateScreenWidth(30)),
+            // PopularProducts(),
+            // SizedBox(height: getProportionateScreenWidth(30)),
+            //
+            // Container(
+            //   margin: EdgeInsets.only(left: getProportionateScreenWidth(15),right:getProportionateScreenWidth(10) ) ,
+            //   child: GridView.count(
+            //     //padding: EdgeInsets.all(getProportionateScreenWidth(8)),
+            //     physics: ScrollPhysics(),
+            //     crossAxisCount: 2,
+            //     shrinkWrap: true,
+            //     childAspectRatio: (3.3/5),
+            //     children: [
+            //       ...List.generate(
+            //         3,
+            //             (index) {
+            //           if (demoProducts[index].isPopular)
+            //             return Container(
+            //                 margin: EdgeInsets.all(getProportionateScreenWidth(10)),
+            //                 child: ProductCardItem(product: demoProducts[index])
+            //             );
+            //
+            //           return SizedBox
+            //               .shrink(); // here by default width and height is 0
+            //         },
+            //       ),
+            //       SizedBox(width: getProportionateScreenWidth(20)),
+            //     ],
+            //   ),
+            // ),
 
 
-
-
-
-
-
-            SizedBox(height: getProportionateScreenWidth(30)),
-            PopularProducts(),
-            SizedBox(height: getProportionateScreenWidth(30)),
           ],
         ),
       ),
