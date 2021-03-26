@@ -26,6 +26,7 @@ Future<List<String>> getFirestoreobjectFromPath(String path) async {
 }
 
 Future<List<Category>> getFireStoreCategories() async {
+
   return await FirebaseFirestore.instance.collection('category').get().then((queryResult) async {
     List<Category> categorylist = <Category>[];
 
@@ -34,8 +35,22 @@ Future<List<Category>> getFireStoreCategories() async {
             element.id,
             element['arabicName'],
             await getDownloadPathFromstore(element['iconPath']),
+            await getDownloadPathFromstore(element['bannerPath']),
         )
     ));
+
+    Category CategoryTmp;
+    CategoryTmp = categorylist[0];
+    categorylist[0]=categorylist[4];
+    categorylist[4] = CategoryTmp;
+
+    CategoryTmp = categorylist[2];
+    categorylist[2]=categorylist[4];
+    categorylist[4] = CategoryTmp;
+
+
+
+
 
     return categorylist;
   });
