@@ -57,10 +57,13 @@ class PopularProducts2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding:
-          EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
-          child: SectionTitle(title: "Popular Products", press: () {}),
+        Directionality(
+          textDirection: TextDirection.rtl,
+          child: Padding(
+            padding:
+            EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+            child: SectionTitle(title: "منتجات رائعة", press: () {}),
+          ),
         ),
         SizedBox(height: getProportionateScreenWidth(20)),
         SingleChildScrollView(

@@ -12,12 +12,15 @@ class SpecialOffers extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
-          child: SectionTitle(
-            title: "Special for you",
-            press: () {},
+        Directionality(
+          textDirection: TextDirection.rtl,
+          child: Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+            child: SectionTitle(
+              title: "جميع الفئات",
+              press: () {},
+            ),
           ),
         ),
         SizedBox(height: getProportionateScreenWidth(20)),

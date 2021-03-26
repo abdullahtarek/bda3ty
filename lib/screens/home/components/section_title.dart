@@ -20,14 +20,14 @@ class SectionTitle extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-            fontSize: getProportionateScreenWidth(18),
+            fontSize: getProportionateScreenWidth(20),
             color: Colors.black,
           ),
         ),
         GestureDetector(
           onTap: press,
           child: Text(
-            "See More",
+            "شاهد المزيد",
             style: TextStyle(color: Color(0xFFBBBBBB)),
           ),
         ),

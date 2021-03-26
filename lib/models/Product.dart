@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Product2 {
   String id;
-  String title,description;
+  String title,description,categoryId;
   List<String> images;
   double minPrice,maxPrice;
   int minQuantity;
@@ -11,6 +11,7 @@ class Product2 {
       @required this.id,
       @required this.title,
                 this.description,
+      @required this.categoryId,
       @required this.images,
       @required this.minPrice,
       @required this.maxPrice,

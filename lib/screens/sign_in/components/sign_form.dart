@@ -2,15 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/components/custom_surfix_icon.dart';
 import 'package:shop_app/components/form_error.dart';
 import 'package:shop_app/helper/keyboard.dart';
 import 'package:shop_app/screens/forgot_password/forgot_password_screen.dart';
+import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/screens/login_success/login_success_screen.dart';
 import 'package:shop_app/screens/otp/otp_screen.dart';
+import 'package:shop_app/screens/sign_up/sign_up_screen.dart';
 
 import '../../../components/default_button.dart';
 import '../../../constants.dart';
+import '../../../main.dart';
 import '../../../size_config.dart';
 
 String verificationCode ='-9999';
@@ -56,56 +60,56 @@ class _SignFormState extends State<SignForm> {
           SizedBox(height: getProportionateScreenHeight(30)),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
+          // DefaultButton2(
+          //   text: "تسجيل الدخول",
+          //   press: () async {
+          //     if (_formKey.currentState.validate()) {
+          //       _formKey.currentState.save();
+          //       // if all are valid then go to success screen
+          //       KeyboardUtil.hideKeyboard(context);
+          //
+          //       String doc_id = "4lnadHg2Ejstd21XCLOR";
+          //
+          //       await FirebaseFirestore.instance.collection('users').doc(doc_id).get().then(
+          //           (doc) {
+          //             if (doc.exists)
+          //               {
+          //                 print("exists");
+          //                 print(doc['name']);
+          //                 // When he successfully signs up
+          //                 FirebaseFirestore.instance.collection("users").doc(doc_id).set(
+          //                     {
+          //                       "name":"Abdullah",
+          //                       "phoneNumber": "01009026001",
+          //                       "storeAddress": "6 od october",
+          //                       "storeName": "hamada",
+          //                       "state" : "unverfied"
+          //                     });
+          //
+          //
+          //               }
+          //             else{
+          //               // when he goes to sign up page
+          //               print("Dose not exist");
+          //               FirebaseFirestore.instance.collection("users").doc(doc_id).set(
+          //                   {
+          //                     "phoneNumber": "01009026001",
+          //                     "state" : "SignUp"
+          //                   });
+          //
+          //             }
+          //           });
+          //
+          //       print("heyyyyy");
+          //
+          //       //Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+          //     }
+          //   },
+          //     color: kPrimaryColor
+          // ),
+          //SizedBox(height: getProportionateScreenHeight(20)),
           DefaultButton2(
-            text: "تسجيل الدخول",
-            press: () async {
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                // if all are valid then go to success screen
-                KeyboardUtil.hideKeyboard(context);
-
-                String doc_id = "4lnadHg2Ejstd21XCLOR";
-
-                await FirebaseFirestore.instance.collection('users').doc(doc_id).get().then(
-                    (doc) {
-                      if (doc.exists)
-                        {
-                          print("exists");
-                          print(doc['name']);
-                          // When he successfully signs up
-                          FirebaseFirestore.instance.collection("users").doc(doc_id).set(
-                              {
-                                "name":"Abdullah",
-                                "phoneNumber": "01009026001",
-                                "storeAddress": "6 od october",
-                                "storeName": "hamada",
-                                "state" : "unverfied"
-                              });
-
-
-                        }
-                      else{
-                        // when he goes to sign up page
-                        print("Dose not exist");
-                        FirebaseFirestore.instance.collection("users").doc(doc_id).set(
-                            {
-                              "phoneNumber": "01009026001",
-                              "state" : "SignUp"
-                            });
-
-                      }
-                    });
-
-                print("heyyyyy");
-
-                //Navigator.pushNamed(context, LoginSuccessScreen.routeName);
-              }
-            },
-              color: kPrimaryColor
-          ),
-          SizedBox(height: getProportionateScreenHeight(20)),
-          DefaultButton2(
-            text: "إنشاء حساب",
+            text: "إنشاء حساب / تسجيل الدخول",
             press: () {
               if (_formKey.currentState.validate()) {
                 KeyboardUtil.hideKeyboard(context);
@@ -113,7 +117,7 @@ class _SignFormState extends State<SignForm> {
                 Navigator.pushNamed(context, OtpScreen.routeName, arguments: _phone_number.text);
               }
             },
-            color: kSecondaryColor
+            color: kPrimaryColor
           ),
 
         ],
@@ -207,6 +211,34 @@ class _SignFormState extends State<SignForm> {
 
               print("yyaaaaayyyy logged in ");
 
+              userId = value.user.uid;
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.setString('userId',value.user.uid );
+
+
+              await FirebaseFirestore.instance.collection('users').doc(userId).get().then(
+                      (doc) {
+                    if (doc.exists) {
+                      if (doc['state'] == "signUp") {
+                        return Navigator.pushNamed(context, SignUpScreen.routeName);
+                      }
+                      else {
+                        if (doc['state']=="notVerfied"){
+                          return Navigator.pushNamed(context, HomeScreen.routeName);
+                        }
+                        else {
+                          return Navigator.pushNamed(context, HomeScreen.routeName);
+                        }
+                      }
+                    }
+                    else {
+
+                      CollectionReference users = FirebaseFirestore.instance.collection('users');
+                      users.doc(userId).set({'state': "signUp"});
+
+                      return Navigator.pushNamed(context, SignUpScreen.routeName);
+                    }
+                  });
 
             }
           });

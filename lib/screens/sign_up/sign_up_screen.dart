@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/home/home_screen.dart';
 
 import '../../size_config.dart';
 import 'components/body.dart';
@@ -10,9 +11,11 @@ class SignUpScreen extends StatelessWidget {
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign Up"),
+        title: Text("إنشاء حساب"),
       ),
       body: Body(),
+
+      floatingActionButton: callButton(),
     );
   }
 }

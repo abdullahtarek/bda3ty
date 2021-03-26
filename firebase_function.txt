@@ -32,3 +32,17 @@ await FirebaseStorage.instance.ref().child("products/3ykK1fvn2oyabNqD8BKA/image_
 
               });
               
+
+======================================================================================================================
+
+** Loop over all items ina firebase directory
+
+await FirebaseStorage.instance.ref("products/3ykK1fvn2oyabNqD8BKA/").listAll().then((value) {
+
+                value.items.forEach((element) {
+                  print(element.fullPath);
+
+                });
+
+              });
+

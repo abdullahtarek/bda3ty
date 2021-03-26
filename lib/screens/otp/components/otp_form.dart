@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/components/default_button.dart';
+import 'package:shop_app/main.dart';
+import 'package:shop_app/screens/home/home_screen.dart';
+import 'package:shop_app/screens/sign_up/sign_up_screen.dart';
 import 'package:shop_app/size_config.dart';
 import 'package:shop_app/screens/sign_in/components/sign_form.dart';
 import '../../../constants.dart';
@@ -70,7 +75,7 @@ class _OtpFormState extends State<OtpForm> {
                 width: getProportionateScreenWidth(40),
                 child: TextFormField(
                   autofocus: true,
-                  obscureText: true,
+                  //obscureText: true,
                   style: TextStyle(fontSize: 24),
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
@@ -85,7 +90,7 @@ class _OtpFormState extends State<OtpForm> {
                 width: getProportionateScreenWidth(40),
                 child: TextFormField(
                   focusNode: pin2FocusNode,
-                  obscureText: true,
+                  //obscureText: true,
                   style: TextStyle(fontSize: 24),
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
@@ -98,7 +103,7 @@ class _OtpFormState extends State<OtpForm> {
                 width: getProportionateScreenWidth(40),
                 child: TextFormField(
                   focusNode: pin3FocusNode,
-                  obscureText: true,
+                  //obscureText: true,
                   style: TextStyle(fontSize: 24),
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
@@ -111,7 +116,7 @@ class _OtpFormState extends State<OtpForm> {
                 width: getProportionateScreenWidth(40),
                 child: TextFormField(
                   focusNode: pin4FocusNode,
-                  obscureText: true,
+                  //obscureText: true,
                   style: TextStyle(fontSize: 24),
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
@@ -124,7 +129,7 @@ class _OtpFormState extends State<OtpForm> {
                 width: getProportionateScreenWidth(40),
                 child: TextFormField(
                   focusNode: pin5FocusNode,
-                  obscureText: true,
+                  //obscureText: true,
                   style: TextStyle(fontSize: 24),
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
@@ -137,7 +142,7 @@ class _OtpFormState extends State<OtpForm> {
                 width: getProportionateScreenWidth(40),
                 child: TextFormField(
                   focusNode: pin6FocusNode,
-                  obscureText: true,
+                  //obscureText: true,
                   style: TextStyle(fontSize: 24),
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
@@ -145,7 +150,7 @@ class _OtpFormState extends State<OtpForm> {
                   controller: b6,
                   onChanged: (value) {
                     if (value.length == 1) {
-                      pin4FocusNode.unfocus();
+                      authenticateFromAnotherPhone(b1, b2, b3, b4, b5, b6);
                       // Then you need to check is the code is correct or not
                     }
                   },
@@ -157,28 +162,60 @@ class _OtpFormState extends State<OtpForm> {
           ),
           SizedBox(height: SizeConfig.screenHeight * 0.15),
           DefaultButton(
-            text: "Continue",
+            text: "استمر",
             press: () {
-              FirebaseAuth auth = FirebaseAuth.instance;
-
-              String input_code = b1.text + b2.text + b3.text+b4.text+b5.text+b6.text;
-              print(input_code);
-              print(_verificationCode);
-
-              AuthCredential authCreds = PhoneAuthProvider.credential(verificationId: _verificationCode, smsCode: input_code);
-              print("Verficiation startss hereee ====================================");
-
-              auth.signInWithCredential(authCreds).then((UserCredential result){
-                print('herrrrreeeeeee');
-              }).catchError((e){
-                print(e);
-              });
+              authenticateFromAnotherPhone(b1, b2, b3, b4, b5, b6);
 
             },
           )
         ],
       ),
     );
+  }
+
+  void authenticateFromAnotherPhone(TextEditingController b1, TextEditingController b2, TextEditingController b3, TextEditingController b4, TextEditingController b5, TextEditingController b6) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    
+    String input_code = b1.text + b2.text + b3.text+b4.text+b5.text+b6.text;
+    print(input_code);
+    print(_verificationCode);
+    
+    AuthCredential authCreds = PhoneAuthProvider.credential(verificationId: _verificationCode, smsCode: input_code);
+    print("Verficiation startss hereee ====================================");
+    
+    auth.signInWithCredential(authCreds).then((UserCredential result) async {
+      print("Validation code suceddeeddddddddddddddddddd");
+      userId = result.user.uid;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('userId',userId );
+
+      await FirebaseFirestore.instance.collection('users').doc(userId).get().then(
+              (doc) {
+            if (doc.exists) {
+              if (doc['state'] == "signUp") {
+                return Navigator.pushNamed(context, SignUpScreen.routeName);
+              }
+              else {
+                if (doc['state']=="notVerfied"){
+                  return Navigator.pushNamed(context, HomeScreen.routeName);
+
+                }
+                else {
+                  return Navigator.pushNamed(context, HomeScreen.routeName);
+                }
+              }
+            }
+            else {
+
+              CollectionReference users = FirebaseFirestore.instance.collection('users');
+              users.doc(userId).set({'state': "signUp"});
+
+              return Navigator.pushNamed(context, SignUpScreen.routeName);
+            }
+          });
+    }).catchError((e){
+      print(e);
+    });
   }
 
 }

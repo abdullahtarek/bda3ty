@@ -18,7 +18,7 @@ class Body extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: SizeConfig.screenHeight * 0.04), // 4%
-                Text("تسجيل حساب", style: headingStyle),
+                Text("إنشاء حساب", style: headingStyle),
                 Text(
                   "أكمل التفاصيل الخاصة بك \nللمتابعة إلى التطبيق",
                   textAlign: TextAlign.center,

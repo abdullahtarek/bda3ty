@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shop_app/models/Product.dart';
 
+import 'models/category.dart';
+
 
 Future<String> getDownloadPathFromstore (String path) async {
   return await FirebaseStorage.instance.ref().child(path).getDownloadURL();
@@ -20,13 +22,28 @@ Future<List<String>> getFirestoreobjectFromPath(String path) async {
     });
 
   });
-
   return imglist;
 }
 
-Future<List<Product2>> getFireStoreProducts() async {
+Future<List<Category>> getFireStoreCategories() async {
+  return await FirebaseFirestore.instance.collection('category').get().then((queryResult) async {
+    List<Category> categorylist = <Category>[];
 
-  return await FirebaseFirestore.instance.collection('products').limit(2).get().then((queryResult) async {
+    await Future.forEach(queryResult.docs, (element) async =>  categorylist.add(
+        Category(
+            element.id,
+            element['arabicName'],
+            await getDownloadPathFromstore(element['iconPath']),
+        )
+    ));
+
+    return categorylist;
+  });
+
+}
+
+Future<List<Product2>> getFireStoreCategoryProducts(String id) async {
+  return await FirebaseFirestore.instance.collection('products').where("categoryId", isEqualTo: id ).limit(10).get().then((queryResult) async {
     List<Product2> productslist = <Product2>[];
 
     await Future.forEach(queryResult.docs, (element) async =>  productslist.add(
@@ -34,6 +51,30 @@ Future<List<Product2>> getFireStoreProducts() async {
             element.id,
             element['arabicName'],
             element['description'],
+            element['categoryId'],
+            await getFirestoreobjectFromPath("products/"+element.id+"/"),
+            element['minPrice'].toDouble(),
+            element['maxPrice'].toDouble(),
+            element['minQuantity'])
+    ));
+
+    return productslist;
+  });
+
+}
+
+
+Future<List<Product2>> getFireStoreProducts() async {
+
+  return await FirebaseFirestore.instance.collection('products').limit(10).get().then((queryResult) async {
+    List<Product2> productslist = <Product2>[];
+
+    await Future.forEach(queryResult.docs, (element) async =>  productslist.add(
+        Product2(
+            element.id,
+            element['arabicName'],
+            element['description'],
+            element['categoryId'],
             await getFirestoreobjectFromPath("products/"+element.id+"/"),
             element['minPrice'].toDouble(),
             element['maxPrice'].toDouble(),
