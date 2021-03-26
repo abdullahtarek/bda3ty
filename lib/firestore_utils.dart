@@ -48,10 +48,6 @@ Future<List<Category>> getFireStoreCategories() async {
     categorylist[2]=categorylist[4];
     categorylist[4] = CategoryTmp;
 
-
-
-
-
     return categorylist;
   });
 
